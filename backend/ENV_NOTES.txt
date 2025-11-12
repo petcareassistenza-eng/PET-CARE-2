@@ -1,0 +1,11 @@
+# Add these env vars to your backend .env:
+
+# Subscription prices
+STRIPE_PRICE_PRO_MONTHLY=price_xxx
+STRIPE_PRICE_PRO_QUARTERLY=price_xxx
+STRIPE_PRICE_PRO_ANNUAL=price_xxx
+
+# Optional promotion codes that map to FREE-1M/3M/12M created by stripe_setup.ts
+STRIPE_PROMO_FREE_1M=promo_xxx
+STRIPE_PROMO_FREE_3M=promo_xxx
+STRIPE_PROMO_FREE_12M=promo_xxx

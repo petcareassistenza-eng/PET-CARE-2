@@ -1,0 +1,54 @@
+# Node modules (will be installed in container)
+node_modules/
+npm-debug.log*
+
+# Build output (will be built in container)
+dist/
+
+# Environment files (should be set via Cloud Run)
+.env
+.env.*
+!.env.example
+
+# Firebase service account keys (NEVER INCLUDE IN IMAGE)
+keys/
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+tests/
+test-data/
+*.test.ts
+*.spec.ts
+
+# Deployment scripts (not needed in container)
+deployment/
+scripts/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
