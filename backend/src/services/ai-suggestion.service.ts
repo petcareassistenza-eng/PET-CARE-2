@@ -1,3 +1,4 @@
+import { getDb } from '../utils/firebaseAdmin';
 /**
  * AI Suggestion Engine - Smart PRO Matching
  * 
@@ -15,7 +16,7 @@ import admin from 'firebase-admin';
 
 import { logger } from '../logger';
 
-const db = admin.firestore();
+const db = getDb();
 
 interface ProSuggestion {
   proId: string;

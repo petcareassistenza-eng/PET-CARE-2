@@ -1,10 +1,11 @@
+import { getDb } from '../utils/firebaseAdmin';
 import { Router, Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 import { DateTime, Interval } from 'luxon';
 
 import { logger } from '../logger.js';
 
-const db = admin.firestore();
+const db = getDb();
 const router = Router();
 
 type IntervalStr = { start: string; end: string }; // "HH:mm"

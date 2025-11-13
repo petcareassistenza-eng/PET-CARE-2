@@ -29,6 +29,7 @@ import adminRouter from './routes/admin';
 import authRouter from './routes/auth.routes';
 import bookingsRouter from './routes/booking.routes';
 import gdprRouter from './routes/gdpr';
+import healthRouter from './routes/health';
 import internalRouter from './routes/internal';
 import jobsRouter from './routes/jobs';
 import messagesRouter from './routes/messages';
@@ -36,6 +37,8 @@ import paymentsRouter from './routes/payments.routes';
 import prosRouter from './routes/pros';
 import reviewsRouter from './routes/reviews.routes';
 import suggestionsRouter from './routes/suggestions.routes';
+import swaggerRouter from './docs/swagger';
+import testRouter from './routes/test';
 
 // ==========================================
 // Express App Configuration
@@ -92,17 +95,32 @@ app.use(compression());
 app.use(trimStrings);
 
 // ==========================================
-// Health Check (no authentication)
+// Health, Readiness, Version Endpoints (no authentication)
 // ==========================================
 
-app.get('/health', (_req: Request, res: Response) => {
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    maintenanceMode: process.env.MAINTENANCE_MODE === 'true',
-  });
-});
+app.use('/', healthRouter);
+
+// Test routes (Firebase connectivity, diagnostics)
+app.use('/test', testRouter);
+
+// ==========================================
+// API Documentation (Swagger UI)
+// ==========================================
+
+// Enable docs based on environment
+// Production: Only if ENABLE_DOCS=true is set explicitly
+// Non-production: Always enabled for development convenience
+const shouldEnableDocs =
+  process.env.ENABLE_DOCS === 'true' || process.env.NODE_ENV !== 'production';
+
+if (shouldEnableDocs) {
+  app.use('/docs', swaggerRouter);
+  console.log(
+    `📚 API Documentation enabled at /docs (mode: ${process.env.NODE_ENV === 'production' ? 'read-only' : 'interactive'})`,
+  );
+} else {
+  console.log('📚 API Documentation disabled (set ENABLE_DOCS=true to enable)');
+}
 
 // ==========================================
 // Rate Limiting (applied to API routes)

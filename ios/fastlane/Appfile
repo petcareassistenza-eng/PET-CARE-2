@@ -1,0 +1,20 @@
+# Appfile - MyPetCareApp iOS App Configuration
+# For more information about the Appfile, see:
+# https://docs.fastlane.tools/advanced/#appfile
+
+# Apple ID / App Store Connect Account
+# You can also set this via environment variable: FASTLANE_USER
+# apple_id ENV["APPLE_ID"] || "your-apple-id@example.com"
+
+# Bundle Identifier
+app_identifier ENV["IOS_BUNDLE_ID"] || "com.mypetcareapp.ios"
+
+# Apple Developer Team ID
+# Find at: https://developer.apple.com/account → Membership
+team_id ENV["IOS_TEAM_ID"]
+
+# App Store Connect Team ID (if different from Developer Team ID)
+# itc_team_id ENV["ITC_TEAM_ID"]
+
+# For more information about the Appfile, see:
+# https://docs.fastlane.tools/advanced/Appfile/

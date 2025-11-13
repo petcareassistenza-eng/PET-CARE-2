@@ -1,0 +1,171 @@
+name: Performance Test (k6 - Staging)
+
+# Triggers:
+# - Manually via workflow_dispatch
+# - Automatically after backend changes on develop branch
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target API URL (leave empty to use STAGING_API_URL secret)'
+        required: false
+        type: string
+  push:
+    branches: [develop]
+    paths:
+      - 'backend/**'
+      - 'perf/**'
+      - '.github/workflows/ci-perf.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  k6-performance:
+    name: k6 Load Test (Staging)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      # Use manual input if provided, otherwise use staging secret
+      BASE_URL: ${{ inputs.target_url || secrets.STAGING_API_URL || 'http://localhost:8080' }}
+
+    steps:
+      # ==========================================
+      # Setup
+      # ==========================================
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: latest
+
+      # ==========================================
+      # Pre-Test Health Check
+      # ==========================================
+      
+      - name: Verify API is reachable
+        run: |
+          echo "🔍 Testing API endpoint: $BASE_URL"
+          
+          # Health check with retry logic
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if curl -fsSL "$BASE_URL/healthz" > /dev/null 2>&1; then
+              echo "✅ API health check passed"
+              exit 0
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              echo "⚠️ Health check failed (attempt $RETRY_COUNT/$MAX_RETRIES)"
+              sleep 5
+            fi
+          done
+          
+          echo "❌ API health check failed after $MAX_RETRIES attempts"
+          echo "💡 Ensure API is deployed and accessible at: $BASE_URL"
+          exit 1
+
+      # ==========================================
+      # Run k6 Load Test
+      # ==========================================
+      
+      - name: Run k6 performance test
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🚀 Starting k6 performance test"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Target: $BASE_URL"
+          echo "Test: 20 concurrent users for 1 minute"
+          echo "Thresholds: p95<800ms, >99% success"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          
+          k6 run perf/k6-e2e.js \
+            --out json=perf-results.json \
+            --summary-export=perf-summary.json
+
+      # ==========================================
+      # Post-Test Analysis
+      # ==========================================
+      
+      - name: Analyze results
+        if: always()
+        run: |
+          echo "📊 Performance test completed"
+          
+          # Check if summary file exists
+          if [ -f perf-summary.json ]; then
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📈 KEY METRICS"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            # Parse JSON summary (simplified - production would use jq)
+            cat perf-summary.json | grep -E "(http_req_duration|checks|errors)" || true
+            
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          else
+            echo "⚠️ Summary file not found"
+          fi
+
+      # ==========================================
+      # Upload Artifacts
+      # ==========================================
+      
+      - name: Upload k6 results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-performance-results
+          path: |
+            perf-results.json
+            perf-summary.json
+          retention-days: 30
+
+      # ==========================================
+      # Notify on Failure (Optional)
+      # ==========================================
+      
+      - name: Performance test failed
+        if: failure()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "❌ PERFORMANCE TEST FAILED"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "One or more performance thresholds were not met:"
+          echo "  • p95 response time > 800ms"
+          echo "  • Success rate < 99%"
+          echo "  • Error rate > 1%"
+          echo ""
+          echo "💡 Next steps:"
+          echo "  1. Review uploaded artifacts for detailed metrics"
+          echo "  2. Check Cloud Run logs for errors"
+          echo "  3. Verify database query performance"
+          echo "  4. Consider scaling up resources"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  # ==========================================
+  # Slack/Discord Notification (Optional)
+  # ==========================================
+  
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: k6-performance
+    if: always() && github.event_name == 'push'
+    
+    steps:
+      - name: Performance test passed
+        if: needs.k6-performance.result == 'success'
+        run: |
+          echo "✅ Performance test passed - API meets all thresholds"
+          # Add Slack/Discord webhook call here if needed
+
+      - name: Performance test failed
+        if: needs.k6-performance.result != 'success'
+        run: |
+          echo "❌ Performance test failed - review metrics"
+          # Add Slack/Discord webhook call here if needed

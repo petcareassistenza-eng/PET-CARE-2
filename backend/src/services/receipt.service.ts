@@ -1,3 +1,4 @@
+import { getDb } from '../utils/firebaseAdmin';
 /**
  * Receipt Service - PDF Generation with Firebase Storage Upload
  * 
@@ -9,7 +10,7 @@
 import admin from 'firebase-admin';
 import PDFDocument from 'pdfkit';
 
-const db = admin.firestore();
+const db = getDb();
 const storage = admin.storage();
 
 /**

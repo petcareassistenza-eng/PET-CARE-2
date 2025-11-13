@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://mypetcareapp.org/</loc>
+    <lastmod>2025-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://mypetcareapp.org/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://mypetcareapp.org/en/" />
+    <mobile:mobile/>
+  </url>
+  
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://mypetcareapp.org/privacy.html</loc>
+    <lastmod>2025-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://mypetcareapp.org/privacy.html" />
+    <mobile:mobile/>
+  </url>
+  
+  <!-- Terms of Service -->
+  <url>
+    <loc>https://mypetcareapp.org/terms.html</loc>
+    <lastmod>2025-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://mypetcareapp.org/terms.html" />
+    <mobile:mobile/>
+  </url>
+  
+  <!-- Support Page -->
+  <url>
+    <loc>https://mypetcareapp.org/support.html</loc>
+    <lastmod>2025-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://mypetcareapp.org/support.html" />
+    <mobile:mobile/>
+  </url>
+  
+  <!-- 
+    FUTURE PAGES TO ADD:
+    
+    <url>
+      <loc>https://mypetcareapp.org/about.html</loc>
+      <lastmod>2025-11-12</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+    </url>
+    
+    <url>
+      <loc>https://mypetcareapp.org/contact.html</loc>
+      <lastmod>2025-11-12</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+    </url>
+    
+    <url>
+      <loc>https://mypetcareapp.org/pricing.html</loc>
+      <lastmod>2025-11-12</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.7</priority>
+    </url>
+    
+    Dynamic URLs (services, professionals, blog posts) should be 
+    generated dynamically by your backend and added to sitemap
+  -->
+  
+</urlset>

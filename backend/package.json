@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development node --watch --loader ts-node/esm -r dotenv/config src/index.ts",
+    "dev": "NODE_ENV=development tsx watch --clear-screen=false src/index.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node -r dotenv/config dist/index.js",
     "lint": "eslint . --ext .ts",
@@ -13,7 +13,12 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "precommit": "npm run lint && npm run format && npm test"
+    "precommit": "npm run lint && npm run format && npm test",
+    "stripe:listen": "stripe listen --forward-to localhost:8080/api/payments/webhook",
+    "stripe:trigger:checkout": "stripe trigger checkout.session.completed",
+    "stripe:trigger:payment": "stripe trigger payment_intent.succeeded",
+    "stripe:trigger:refund": "stripe trigger charge.refunded",
+    "stripe:events": "stripe events list --limit 10"
   },
   "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
@@ -34,7 +39,9 @@
     "pino": "^9.5.0",
     "pino-pretty": "^11.3.0",
     "stripe": "^16.6.0",
+    "swagger-ui-express": "^5.0.1",
     "xss-clean": "^0.1.4",
+    "yaml": "^2.6.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -45,6 +52,7 @@
     "@types/luxon": "^3.4.2",
     "@types/node": "^22.7.4",
     "@types/supertest": "^6.0.2",
+    "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.0.0",
@@ -53,6 +61,7 @@
     "prettier": "^3.3.0",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.6.3",
     "vitest": "^2.0.0"
   }

@@ -1,3 +1,4 @@
+import { getDb } from '../utils/firebaseAdmin';
 import express from 'express';
 import * as admin from 'firebase-admin';
 
@@ -18,7 +19,7 @@ import {
 } from '../validators/booking.validator';
 
 const router = express.Router();
-const db = admin.firestore();
+const db = getDb();
 
 // Middleware to require authentication
 async function requireAuth(req: any, res: any, next: any) {

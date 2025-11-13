@@ -1,3 +1,4 @@
+import { getDb } from '../utils/firebaseAdmin';
 /**
  * MyPetCare - Messages Router
  * Handles in-app chat between users and PROs
@@ -7,7 +8,7 @@ import { Router, Request, Response } from 'express';
 import admin from 'firebase-admin';
 
 const router = Router();
-const db = admin.firestore();
+const db = getDb();
 const fcm = admin.messaging();
 
 // ============================================================================

@@ -1,9 +1,10 @@
+import { getDb } from '../utils/firebaseAdmin';
 import { Router, Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 
 import { logger } from '../logger.js';
 
-const db = admin.firestore();
+const db = getDb();
 const router = Router();
 
 /**

@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supporto - MyPetCare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            background: linear-gradient(135deg, #1C8275 0%, #145B52 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            margin: -20px -20px 40px -20px;
+            border-radius: 0 0 20px 20px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #1C8275;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 3px solid #1C8275;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #145B52;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        p, li {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.05rem;
+        }
+        ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 5px solid #1C8275;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .faq-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            box-shadow: 0 4px 12px rgba(28, 130, 117, 0.15);
+            border-color: #1C8275;
+        }
+        .faq-question {
+            font-weight: bold;
+            color: #1C8275;
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+        .faq-answer {
+            color: #666;
+            line-height: 1.7;
+        }
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .contact-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        .contact-card:hover {
+            border-color: #1C8275;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(28, 130, 117, 0.2);
+        }
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .contact-title {
+            font-weight: bold;
+            color: #1C8275;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .contact-info {
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            background: #1C8275;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background: #145B52;
+            transform: scale(1.05);
+        }
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            color: #888;
+        }
+        a {
+            color: #1C8275;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .highlight-box {
+            background: #E8F5F3;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #1C8275;
+            margin: 25px 0;
+        }
+    </style>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- Theme color -->
+  <meta name="theme-color" content="#1C8275">
+  <meta name="msapplication-TileColor" content="#1C8275">
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-128.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16.png">
+  
+  <!-- iOS meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PetCare">
+  
+  <!-- Windows meta tags -->
+  <meta name="msapplication-TileImage" content="/icons/icon-144.png">
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Centro Supporto</h1>
+            <p>Siamo qui per aiutarti! Trova risposte rapide o contattaci direttamente.</p>
+        </header>
+
+        <div class="highlight-box">
+            <strong>⏱️ Tempi di Risposta:</strong><br>
+            Email: 24-48 ore | Urgenze: risposta prioritaria entro 12 ore
+        </div>
+
+        <h2>📧 Contattaci</h2>
+        <div class="contact-methods">
+            <div class="contact-card">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-title">Email</div>
+                <div class="contact-info">
+                    <a href="mailto:support@mypetcareapp.org">support@mypetcareapp.org</a>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Risposta entro 24-48h</p>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">🌐</div>
+                <div class="contact-title">Sito Web</div>
+                <div class="contact-info">
+                    <a href="https://mypetcareapp.org">mypetcareapp.org</a>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Documentazione completa</p>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">📱</div>
+                <div class="contact-title">App</div>
+                <div class="contact-info">
+                    Impostazioni → Aiuto<br>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Chat supporto integrata</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>❓ Domande Frequenti (FAQ)</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">Come creo un account?</div>
+            <div class="faq-answer">
+                1. Scarica l'app MyPetCare<br>
+                2. Clicca su "Registrati"<br>
+                3. Inserisci email e password<br>
+                4. Verifica la tua email<br>
+                5. Completa il profilo con nome e informazioni di contatto
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Come prenoto un servizio?</div>
+            <div class="faq-answer">
+                1. Accedi all'app MyPetCare<br>
+                2. Cerca professionisti per categoria o geolocalizzazione<br>
+                3. Seleziona un PRO e visualizza i suoi slot disponibili<br>
+                4. Scegli data e ora<br>
+                5. Conferma la prenotazione e paga con Stripe o PayPal<br>
+                6. Riceverai conferma via email e notifica push
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Come posso cancellare una prenotazione?</div>
+            <div class="faq-answer">
+                <strong>Vai su:</strong> Le mie prenotazioni → Seleziona prenotazione → Cancella<br><br>
+                <strong>Politica rimborsi:</strong><br>
+                • Più di 24h prima: 100% rimborso<br>
+                • 12-24h prima: 50% rimborso<br>
+                • Meno di 12h: Nessun rimborso<br><br>
+                I rimborsi vengono elaborati entro 5-10 giorni lavorativi.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Quali metodi di pagamento accettate?</div>
+            <div class="faq-answer">
+                Accettiamo:<br>
+                • 💳 Carte di credito/debito (Visa, Mastercard, Amex) tramite Stripe<br>
+                • 💰 PayPal<br>
+                • 🔄 Abbonamenti mensili ricorrenti per account PRO<br><br>
+                Tutti i pagamenti sono sicuri e crittografati. NON memorizziamo dati di carte di credito.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Come funzionano i coupon promozionali?</div>
+            <div class="faq-answer">
+                <strong>Coupon disponibili:</strong><br>
+                • <code>FREE-1M</code>: 1 mese gratuito abbonamento PRO<br>
+                • <code>3M</code>: 20% sconto su 3 mesi<br>
+                • <code>12M</code>: 30% sconto su piano annuale<br><br>
+                <strong>Come applicarli:</strong> Vai su Abbonamenti → Inserisci codice coupon → Applica
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Come divento un PRO (professionista)?</div>
+            <div class="faq-answer">
+                <strong>Requisiti:</strong><br>
+                • Partita IVA attiva<br>
+                • Qualifiche professionali (es. iscrizione Ordine Veterinari)<br>
+                • Assicurazione responsabilità civile<br>
+                • Sottoscrizione abbonamento mensile (€29.99 o €49.99)<br><br>
+                <strong>Procedura:</strong> Impostazioni → Diventa PRO → Compila form → Verifica documenti
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Come posso modificare o eliminare il mio account?</div>
+            <div class="faq-answer">
+                <strong>Modificare dati:</strong> Impostazioni → Profilo → Modifica<br><br>
+                <strong>Eliminare account:</strong><br>
+                1. Vai su Impostazioni → Privacy → Cancella Account<br>
+                2. Conferma l'operazione<br>
+                3. I tuoi dati saranno eliminati entro 30 giorni<br><br>
+                <strong>Nota:</strong> I dati fiscali saranno conservati per 10 anni (obbligo di legge).
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Come funzionano le recensioni?</div>
+            <div class="faq-answer">
+                Puoi lasciare recensioni solo per servizi che hai effettivamente utilizzato.<br><br>
+                <strong>Come lasciare recensione:</strong><br>
+                1. Vai su "Le mie prenotazioni"<br>
+                2. Seleziona prenotazione completata<br>
+                3. Clicca "Lascia recensione"<br>
+                4. Assegna stelle (1-5) e scrivi commento<br><br>
+                Le recensioni false o offensive verranno rimosse.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Cosa faccio se ho un problema con un PRO?</div>
+            <div class="faq-answer">
+                1. Contatta direttamente il PRO tramite chat in-app<br>
+                2. Se non risolvi, contatta il nostro supporto: <a href="mailto:support@mypetcareapp.org">support@mypetcareapp.org</a><br>
+                3. Fornisci: numero prenotazione, descrizione problema, screenshot (se possibile)<br>
+                4. Valuteremo il caso e interverremo secondo necessità<br><br>
+                <strong>Nota:</strong> MyPetCare è una piattaforma di intermediazione. I servizi sono forniti direttamente dai PRO.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">È sicuro usare MyPetCare?</div>
+            <div class="faq-answer">
+                <strong>Sì!</strong> Adottiamo misure di sicurezza avanzate:<br>
+                • 🔐 Crittografia TLS/SSL per tutte le comunicazioni<br>
+                • 🔐 Password crittografate con bcrypt<br>
+                • 🔐 Pagamenti gestiti da Stripe e PayPal (certificati PCI DSS)<br>
+                • 🔐 Backup automatici giornalieri<br>
+                • 🔐 Conformità GDPR completa<br><br>
+                I tuoi dati sono al sicuro!
+            </div>
+        </div>
+
+        <h2>📚 Guide e Documentazione</h2>
+        <div class="card">
+            <h3>📖 Risorse Utili</h3>
+            <ul>
+                <li><a href="https://mypetcareapp.org/privacy">📄 Privacy Policy</a> - Come proteggiamo i tuoi dati</li>
+                <li><a href="https://mypetcareapp.org/terms">📋 Termini di Servizio</a> - Condizioni d'uso della piattaforma</li>
+                <li><strong>🎓 Tutorial Video</strong> - (Coming soon)</li>
+                <li><strong>💡 Blog</strong> - Consigli per la cura degli animali (Coming soon)</li>
+            </ul>
+        </div>
+
+        <h2>🚨 Segnala un Problema</h2>
+        <div class="card">
+            <p>Hai riscontrato un bug o un comportamento anomalo nell'app?</p>
+            <p><strong>Invia una segnalazione a:</strong> <a href="mailto:support@mypetcareapp.org">support@mypetcareapp.org</a></p>
+            <p><strong>Includi:</strong></p>
+            <ul>
+                <li>Descrizione dettagliata del problema</li>
+                <li>Screenshot o video (se possibile)</li>
+                <li>Modello dispositivo e versione OS</li>
+                <li>Versione app (visibile in Impostazioni → Info)</li>
+                <li>Passaggi per riprodurre il bug</li>
+            </ul>
+            <p>Risponderemo entro 48 ore e risolveremo il problema il prima possibile.</p>
+        </div>
+
+        <h2>💬 Feedback e Suggerimenti</h2>
+        <div class="card">
+            <p>Vogliamo migliorare MyPetCare insieme a te!</p>
+            <p>Invia i tuoi suggerimenti, richieste di nuove funzionalità o feedback a:<br>
+            <a href="mailto:support@mypetcareapp.org">support@mypetcareapp.org</a></p>
+            <p><strong>Oggetto Email:</strong> "Feedback - [Tuo Suggerimento]"</p>
+            <p>Leggiamo ogni messaggio e valutiamo attentamente tutte le proposte! 🙏</p>
+        </div>
+
+        <h2>🌟 Lascia una Recensione</h2>
+        <div class="card">
+            <p>Ti piace MyPetCare? Aiutaci a crescere lasciando una recensione!</p>
+            <div style="margin-top: 20px;">
+                <a href="#" class="button">⭐ Recensisci su Google Play</a>
+                <a href="#" class="button">⭐ Recensisci su App Store</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 MyPetCare. Tutti i diritti riservati.</p>
+            <p>
+                <a href="https://mypetcareapp.org">Home</a> | 
+                <a href="https://mypetcareapp.org/privacy">Privacy Policy</a> | 
+                <a href="https://mypetcareapp.org/terms">Termini di Servizio</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.95rem;">
+                <strong>Contatti:</strong> <a href="mailto:support@mypetcareapp.org">support@mypetcareapp.org</a>
+            </p>
+        </footer>
+    </div>
+<!-- Google Consent Mode v2 -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  
+  // Default consent state (denied)
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'functionality_storage': 'denied',
+    'personalization_storage': 'denied',
+    'security_storage': 'granted',  // Always granted for security
+    'wait_for_update': 500
+  });
+  
+  // Load saved consent from localStorage
+  (function() {
+    var consent = localStorage.getItem('cookie_consent');
+    if (consent) {
+      var consentData = JSON.parse(consent);
+      gtag('consent', 'update', consentData);
+    }
+  })();
+</script>
+
+<!-- Google Analytics 4 (replace G-XXXXXXX with your Measurement ID) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXX', {
+    'anonymize_ip': true,
+    'cookie_flags': 'SameSite=None;Secure'
+  });
+</script>
+
+<!-- Cookie Consent Banner Styles -->
+<style>
+  #cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1C8275;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    z-index: 10000;
+    display: none;
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  #cookie-consent-banner.show {
+    display: block;
+  }
+  
+  .cookie-consent-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .cookie-consent-text {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .cookie-consent-text h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .cookie-consent-text p {
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  
+  .cookie-consent-text a {
+    color: #FFF;
+    text-decoration: underline;
+  }
+  
+  .cookie-consent-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .cookie-consent-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .cookie-consent-btn-accept {
+    background: white;
+    color: #1C8275;
+  }
+  
+  .cookie-consent-btn-accept:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
+  }
+  
+  .cookie-consent-btn-reject {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+  
+  .cookie-consent-btn-reject:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .cookie-consent-btn-customize {
+    background: rgba(255,255,255,0.2);
+    color: white;
+  }
+  
+  .cookie-consent-btn-customize:hover {
+    background: rgba(255,255,255,0.3);
+  }
+  
+  /* Cookie Settings Modal */
+  #cookie-settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 10001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  #cookie-settings-modal.show {
+    display: flex;
+  }
+  
+  .cookie-settings-content {
+    background: white;
+    color: #333;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .cookie-settings-content h3 {
+    margin-bottom: 20px;
+    color: #1C8275;
+  }
+  
+  .cookie-category {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .cookie-category:last-child {
+    border-bottom: none;
+  }
+  
+  .cookie-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .cookie-toggle label {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .cookie-toggle input[type="checkbox"] {
+    width: 50px;
+    height: 26px;
+    position: relative;
+    appearance: none;
+    background: #ccc;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .cookie-toggle input[type="checkbox"]:checked {
+    background: #1C8275;
+  }
+  
+  .cookie-toggle input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+  }
+  
+  .cookie-toggle input[type="checkbox"]:checked::before {
+    left: 26px;
+  }
+  
+  .cookie-toggle input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .cookie-description {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  .cookie-settings-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .cookie-settings-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .cookie-settings-buttons .btn-save {
+    background: #1C8275;
+    color: white;
+  }
+  
+  .cookie-settings-buttons .btn-save:hover {
+    background: #145B52;
+  }
+  
+  .cookie-settings-buttons .btn-cancel {
+    background: #eee;
+    color: #333;
+  }
+  
+  .cookie-settings-buttons .btn-cancel:hover {
+    background: #ddd;
+  }
+  
+  @media (max-width: 768px) {
+    .cookie-consent-content {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .cookie-consent-buttons {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .cookie-consent-btn {
+      flex: 1;
+      min-width: 100px;
+    }
+  }
+</style>
+
+<!-- Cookie Consent Banner HTML -->
+<div id="cookie-consent-banner">
+  <div class="cookie-consent-content">
+    <div class="cookie-consent-text">
+      <h3>🍪 Utilizziamo i Cookie</h3>
+      <p>
+        Utilizziamo cookie e tecnologie simili per migliorare la tua esperienza sul nostro sito.
+        Consulta la nostra <a href="/privacy.html">Privacy Policy</a> per maggiori informazioni.
+      </p>
+    </div>
+    <div class="cookie-consent-buttons">
+      <button class="cookie-consent-btn cookie-consent-btn-accept" onclick="acceptAllCookies()">
+        Accetta Tutti
+      </button>
+      <button class="cookie-consent-btn cookie-consent-btn-reject" onclick="rejectAllCookies()">
+        Rifiuta Tutti
+      </button>
+      <button class="cookie-consent-btn cookie-consent-btn-customize" onclick="showCookieSettings()">
+        Personalizza
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Settings Modal -->
+<div id="cookie-settings-modal">
+  <div class="cookie-settings-content">
+    <h3>⚙️ Impostazioni Cookie</h3>
+    <p style="margin-bottom: 20px;">Scegli quali cookie desideri accettare. I cookie necessari sono sempre attivi.</p>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-necessary" checked disabled>
+          Cookie Necessari
+        </label>
+      </div>
+      <div class="cookie-description">
+        Questi cookie sono essenziali per il funzionamento del sito e non possono essere disabilitati.
+      </div>
+    </div>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-analytics">
+          Cookie Analitici
+        </label>
+      </div>
+      <div class="cookie-description">
+        Ci aiutano a capire come i visitatori utilizzano il sito, raccogliendo informazioni in forma anonima.
+      </div>
+    </div>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-functional">
+          Cookie Funzionali
+        </label>
+      </div>
+      <div class="cookie-description">
+        Permettono di ricordare le tue preferenze e migliorare la tua esperienza personalizzata.
+      </div>
+    </div>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-marketing">
+          Cookie di Marketing
+        </label>
+      </div>
+      <div class="cookie-description">
+        Utilizzati per mostrare contenuti pubblicitari più rilevanti per te e i tuoi interessi.
+      </div>
+    </div>
+    
+    <div class="cookie-settings-buttons">
+      <button class="btn-save" onclick="saveCustomCookieSettings()">Salva Preferenze</button>
+      <button class="btn-cancel" onclick="closeCookieSettings()">Annulla</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script>
+  // Check if user has already made a choice
+  (function() {
+    var consent = localStorage.getItem('cookie_consent');
+    if (!consent) {
+      // Show banner after 1 second
+      setTimeout(function() {
+        document.getElementById('cookie-consent-banner').classList.add('show');
+      }, 1000);
+    }
+  })();
+  
+  function acceptAllCookies() {
+    var consentData = {
+      'ad_storage': 'granted',
+      'ad_user_data': 'granted',
+      'ad_personalization': 'granted',
+      'analytics_storage': 'granted',
+      'functionality_storage': 'granted',
+      'personalization_storage': 'granted'
+    };
+    
+    gtag('consent', 'update', consentData);
+    localStorage.setItem('cookie_consent', JSON.stringify(consentData));
+    localStorage.setItem('cookie_consent_date', new Date().toISOString());
+    
+    hideCookieBanner();
+  }
+  
+  function rejectAllCookies() {
+    var consentData = {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'functionality_storage': 'denied',
+      'personalization_storage': 'denied'
+    };
+    
+    gtag('consent', 'update', consentData);
+    localStorage.setItem('cookie_consent', JSON.stringify(consentData));
+    localStorage.setItem('cookie_consent_date', new Date().toISOString());
+    
+    hideCookieBanner();
+  }
+  
+  function showCookieSettings() {
+    // Load current settings
+    var consent = localStorage.getItem('cookie_consent');
+    if (consent) {
+      var consentData = JSON.parse(consent);
+      document.getElementById('consent-analytics').checked = consentData.analytics_storage === 'granted';
+      document.getElementById('consent-functional').checked = consentData.functionality_storage === 'granted';
+      document.getElementById('consent-marketing').checked = consentData.ad_storage === 'granted';
+    }
+    
+    document.getElementById('cookie-settings-modal').classList.add('show');
+  }
+  
+  function closeCookieSettings() {
+    document.getElementById('cookie-settings-modal').classList.remove('show');
+  }
+  
+  function saveCustomCookieSettings() {
+    var analytics = document.getElementById('consent-analytics').checked;
+    var functional = document.getElementById('consent-functional').checked;
+    var marketing = document.getElementById('consent-marketing').checked;
+    
+    var consentData = {
+      'ad_storage': marketing ? 'granted' : 'denied',
+      'ad_user_data': marketing ? 'granted' : 'denied',
+      'ad_personalization': marketing ? 'granted' : 'denied',
+      'analytics_storage': analytics ? 'granted' : 'denied',
+      'functionality_storage': functional ? 'granted' : 'denied',
+      'personalization_storage': functional ? 'granted' : 'denied'
+    };
+    
+    gtag('consent', 'update', consentData);
+    localStorage.setItem('cookie_consent', JSON.stringify(consentData));
+    localStorage.setItem('cookie_consent_date', new Date().toISOString());
+    
+    closeCookieSettings();
+    hideCookieBanner();
+  }
+  
+  function hideCookieBanner() {
+    document.getElementById('cookie-consent-banner').classList.remove('show');
+  }
+  
+  // Global function to revoke consent (can be called from Privacy Policy page)
+  window.revokeCookieConsent = function() {
+    localStorage.removeItem('cookie_consent');
+    localStorage.removeItem('cookie_consent_date');
+    location.reload();
+  };
+</script>
+
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function() {
+        navigator.serviceWorker.register("/service-worker.js")
+          .then(function(registration) {
+            console.log("✅ Service Worker registered:", registration.scope);
+            
+            // Check for updates
+            registration.addEventListener("updatefound", function() {
+              const newWorker = registration.installing;
+              newWorker.addEventListener("statechange", function() {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  console.log("🔄 New Service Worker available. Refresh to update.");
+                  // Optional: Show update notification to user
+                }
+              });
+            });
+          })
+          .catch(function(error) {
+            console.log("❌ Service Worker registration failed:", error);
+          });
+      });
+      
+      // Handle Service Worker updates
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", function() {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

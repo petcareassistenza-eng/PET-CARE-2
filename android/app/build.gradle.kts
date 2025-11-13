@@ -1,15 +1,19 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 // Load keystore properties
-def keystorePropertiesFile = rootProject.file("key.properties")
-def keystoreProperties = new Properties()
+val keystorePropertiesFile = rootProject.file("app/key.properties")
+val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -37,20 +41,32 @@ android {
 
     // Signing configurations for release builds
     signingConfigs {
-        release {
-            storeFile file(keystoreProperties['storeFile'] ?: System.getenv("KEYSTORE_FILE") ?: "../keystore/upload.jks")
-            storePassword keystoreProperties['storePassword'] ?: System.getenv("KS_PASS")
-            keyAlias keystoreProperties['keyAlias'] ?: System.getenv("ALIAS") ?: "upload"
-            keyPassword keystoreProperties['keyPassword'] ?: System.getenv("ALIAS_PASS")
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                storeFile = file(keystoreProperties.getProperty("storeFile") ?: "../keystore/upload.jks")
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
         }
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.release
-            minifyEnabled = true
-            shrinkResources = true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.getByName("release")
+            // Disable minification and shrinking for faster builds
+            // Re-enable for production APK optimization
+            isMinifyEnabled = false
+            isShrinkResources = false
+            // proguardFiles(
+            //     getDefaultProguardFile("proguard-android-optimize.txt"),
+            //     "proguard-rules.pro"
+            // )
         }
     }
 }

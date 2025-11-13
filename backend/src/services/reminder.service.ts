@@ -1,3 +1,4 @@
+import { getDb } from '../utils/firebaseAdmin';
 /**
  * Reminder Service - Booking Notifications via FCM
  * 
@@ -10,7 +11,7 @@
 
 import admin from 'firebase-admin';
 
-const db = admin.firestore();
+const db = getDb();
 const messaging = admin.messaging();
 
 /**

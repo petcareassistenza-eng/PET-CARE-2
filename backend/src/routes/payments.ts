@@ -1,8 +1,8 @@
 // ESM-ready Express Router per pagamenti Stripe + PayPal con ricevuta PDF su Firebase Storage
 import { Router } from "express";
 import express from "express";
-import * as admin from "firebase-admin";
 import Stripe from "stripe";
+import { getDb, getBucket } from "../utils/firebaseAdmin";
 
 // Node 18+ ha fetch globale (no import 'node-fetch')
 const router = Router();
@@ -11,20 +11,15 @@ const router = Router();
 const {
   STRIPE_SECRET = "",
   STRIPE_WEBHOOK_SECRET = "",
-  FRONT_URL = "https://mypetcare.app",
+  FRONT_URL = "https://mypetcareapp.org",
   PAYPAL_CLIENT_ID = "",
   PAYPAL_CLIENT_SECRET = "",
   PAYPAL_BASE = "https://api-m.sandbox.paypal.com", // ⇦ metti "https://api-m.paypal.com" in produzione
   FIREBASE_STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET || "",
 } = process.env;
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    storageBucket: FIREBASE_STORAGE_BUCKET || undefined,
-  });
-}
-const db = admin.firestore();
-const bucket = admin.storage().bucket();
+const db = getDb();
+const bucket = getBucket().bucket();
 
 const stripe = new Stripe(STRIPE_SECRET, { apiVersion: "2024-06-20" });
 

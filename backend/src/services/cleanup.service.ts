@@ -1,8 +1,8 @@
-import * as admin from 'firebase-admin';
+import { getDb } from '../utils/firebaseAdmin';
 
 import { logger } from '../logger.js';
 
-const db = admin.firestore();
+const db = getDb();
 
 /**
  * Clean up expired locks across all PRO calendars

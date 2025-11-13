@@ -1,17 +1,14 @@
 // ESM-ready Admin Router: stats (Firestore) + refunds (Stripe/PayPal)
 import { Router } from "express";
-import * as admin from "firebase-admin";
 import Stripe from "stripe";
+import { getDb } from "../utils/firebaseAdmin";
 
 // ⚠️ Presuppone che un middleware "requireAuth" popoli req.user
 // e che "requireRole('admin')" sia applicato a monte oppure usi il check inline qui sotto.
 
 const router = Router();
 
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-const db = admin.firestore();
+const db = getDb();
 
 const {
   STRIPE_SECRET = "",

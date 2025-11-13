@@ -1,8 +1,7 @@
-import * as admin from 'firebase-admin';
-
+import { getDb } from '../utils/firebaseAdmin';
 import { logger } from '../logger.js';
 
-const db = admin.firestore();
+const db = getDb();
 
 export interface HoldSlotParams {
   proId: string;

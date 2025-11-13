@@ -143,7 +143,7 @@ import cors from 'cors';
 const allowedOrigins = [
   'https://mypetcare.web.app',
   'https://mypetcare.firebaseapp.com',
-  'https://app.mypetcare.app',
+  'https://app.mypetcareapp.org',
   'https://mypetcare.it',
   'https://www.mypetcare.it'
 ];
@@ -740,7 +740,7 @@ async function sendReceiptEmail(
 ) {
   const msg = {
     to,
-    from: 'noreply@mypetcare.app',
+    from: 'noreply@mypetcareapp.org',
     subject: 'Ricevuta Pagamento MyPetCare',
     html: `
       <h1>Grazie per il tuo pagamento!</h1>

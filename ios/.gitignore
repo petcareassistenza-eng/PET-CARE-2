@@ -1,34 +1,96 @@
-**/dgph
-*.mode1v3
-*.mode2v3
-*.moved-aside
-*.pbxuser
-*.perspectivev3
-**/*sync/
-.sconsign.dblite
-.tags*
-**/.vagrant/
+# iOS Gitignore - MyPetCareApp
+# This file specifies intentionally untracked files to ignore
+
+# ==============================================================================
+# FASTLANE SECRETS (CRITICAL - NEVER COMMIT THESE!)
+# ==============================================================================
+fastlane/.env.prod
+fastlane/.env.staging
+fastlane/.env.development
+fastlane/.env.*.secret
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/README.md
+
+# App Store Connect API Keys
+fastlane/AuthKey_*.p8
+
+# Match certificates (if using Fastlane Match)
+fastlane/certs/
+fastlane/profiles/
+
+# ==============================================================================
+# XCODE BUILD ARTIFACTS
+# ==============================================================================
 **/DerivedData/
-Icon?
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ==============================================================================
+# COCOAPODS
+# ==============================================================================
+Pods/
+.symlinks/
 **/Pods/
-**/.symlinks/
-profile
-xcuserdata
-**/.generated/
-Flutter/App.framework
-Flutter/Flutter.framework
-Flutter/Flutter.podspec
-Flutter/Generated.xcconfig
-Flutter/ephemeral/
-Flutter/app.flx
-Flutter/app.zip
-Flutter/flutter_assets/
-Flutter/flutter_export_environment.sh
+.bundle/
+vendor/bundle
+
+# ==============================================================================
+# RUBY / BUNDLER
+# ==============================================================================
+Gemfile.lock
+.ruby-version
+.ruby-gemset
+
+# ==============================================================================
+# SWIFT / OBJECTIVE-C
+# ==============================================================================
+*.swiftdeps
+*.swiftmodule
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ==============================================================================
+# FLUTTER
+# ==============================================================================
+**/Flutter/ephemeral/
+**/Flutter/App.framework
+**/Flutter/Flutter.framework
+**/Flutter/Flutter.podspec
+**/Flutter/Generated.xcconfig
+**/Flutter/app.flx
+**/Flutter/app.zip
+**/Flutter/flutter_assets/
+**/Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
 
-# Exceptions to above rules.
-!default.mode1v3
-!default.mode2v3
-!default.pbxuser
-!default.perspectivev3
+# ==============================================================================
+# MISCELLANEOUS
+# ==============================================================================
+.DS_Store
+*.log
+*.tmp
+*.bak
+*~.nib
+.LSOverride

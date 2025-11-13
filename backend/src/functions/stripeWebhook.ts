@@ -4,14 +4,14 @@
  */
 
 import { Request, Response } from 'express';
-import admin from 'firebase-admin';
 import Stripe from 'stripe';
+import { getDb } from '../utils/firebaseAdmin';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 });
 
-const db = admin.firestore();
+const db = getDb();
 
 export const handleStripeWebhook = async (req: Request, res: Response) => {
   const sig = req.headers['stripe-signature'] as string;

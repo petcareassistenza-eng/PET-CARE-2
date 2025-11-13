@@ -111,7 +111,7 @@ const db = getDb(); // Lazy init solo quando serve
 **Configurazione:**
 ```bash
 # .env
-CORS_ORIGINS=https://mypetcare.app,https://staging.mypetcare.app
+CORS_ORIGINS=https://mypetcareapp.org,https://staging.mypetcareapp.org
 ```
 
 ---
@@ -340,7 +340,7 @@ Delta:   +20 punti (+29% improvement) 🚀
 
 ```bash
 # CORS Configuration
-CORS_ORIGINS=https://mypetcare.app,https://staging.mypetcare.app
+CORS_ORIGINS=https://mypetcareapp.org,https://staging.mypetcareapp.org
 
 # Stripe Configuration
 STRIPE_SECRET_KEY=sk_live_****
@@ -352,7 +352,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./keys/firebase-key.json
 
 # Other
 NODE_ENV=production
-FRONTEND_URL=https://mypetcare.app
+FRONTEND_URL=https://mypetcareapp.org
 MAINTENANCE_MODE=false
 ```
 

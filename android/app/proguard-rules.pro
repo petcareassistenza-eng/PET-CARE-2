@@ -18,6 +18,14 @@
 
 # Stripe (if integrated)
 -keep class com.stripe.android.** { *; }
+-keep class com.stripe.android.pushProvisioning.** { *; }
+-dontwarn com.stripe.android.pushProvisioning.**
+
+# Play Core Library (for split APKs and deferred components)
+-keep class com.google.android.play.core.** { *; }
+-keep class com.google.android.play.core.splitcompat.** { *; }
+-keep class com.google.android.play.core.splitinstall.** { *; }
+-dontwarn com.google.android.play.core.**
 
 # Keep native methods
 -keepclasseswithmembernames class * {

@@ -1,0 +1,201 @@
+// Firestore Security Rules - My Pet Care Production
+// Last updated: 2025-01-XX
+// Deploy: firebase deploy --only firestore:rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ========== HELPER FUNCTIONS ==========
+    
+    // Check if user is authenticated
+    function isAuth() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns the resource
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+    
+    // Check if user is the PRO owner
+    function isProOwner(proId) {
+      return isAuth() && request.auth.uid == proId;
+    }
+    
+    // Check if user is involved in booking (customer or PRO)
+    function isBookingParty(booking) {
+      return isAuth() && (
+        request.auth.uid == booking.userId || 
+        request.auth.uid == booking.proId
+      );
+    }
+    
+    // ========== USERS COLLECTION ==========
+    
+    match /users/{uid} {
+      // Users can read, update, delete ONLY their own data
+      allow read, update, delete: if isOwner(uid);
+      
+      // Any authenticated user can create their profile
+      allow create: if isAuth() && request.auth.uid == uid;
+      
+      // User devices (FCM tokens, etc.)
+      match /devices/{deviceId} {
+        allow read, write: if isOwner(uid);
+      }
+      
+      // User preferences
+      match /preferences/{docId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+    
+    // ========== PROS COLLECTION ==========
+    
+    match /pros/{proId} {
+      // Public read access (for user discovery)
+      allow read: if true;
+      
+      // Only backend (Admin SDK) can write PRO data
+      // This prevents client-side status manipulation
+      allow write: if false;
+      
+      // PRO metrics (30-day aggregates)
+      match /metrics/{metricId} {
+        allow read: if isProOwner(proId);
+        allow write: if false; // Only backend
+      }
+      
+      // PRO settings (private)
+      match /settings/{settingId} {
+        allow read: if isProOwner(proId);
+        allow write: if false; // Only backend
+      }
+    }
+    
+    // ========== BOOKINGS COLLECTION ==========
+    
+    match /bookings/{bookingId} {
+      // Read: user or PRO involved in booking
+      allow read: if isAuth() && (
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.proId
+      );
+      
+      // Create: authenticated users only (booking creation via API)
+      // Backend validates and writes the actual booking
+      allow create: if false; // Only via backend API
+      
+      // Update/Delete: Only via backend API
+      // Prevents client-side status manipulation
+      allow update, delete: if false;
+    }
+    
+    // ========== CALENDARS COLLECTION ==========
+    
+    match /calendars/{proId} {
+      // Public read access (for availability checking)
+      allow read: if true;
+      
+      // Only backend can write calendar data
+      allow write: if false;
+      
+      // Slots subcollection
+      match /slots/{slotId} {
+        allow read: if true;
+        allow write: if false; // Only backend
+      }
+      
+      // Locks subcollection (temporary slot reservations)
+      match /locks/{lockId} {
+        allow read: if true;
+        allow write: if false; // Only backend via API
+      }
+      
+      // Bookings subcollection (confirmed slots)
+      match /bookings/{bookingId} {
+        allow read: if true;
+        allow write: if false; // Only backend
+      }
+    }
+    
+    // ========== COUPONS COLLECTION ==========
+    
+    match /coupons/{couponCode} {
+      // Public read (for validation)
+      allow read: if true;
+      
+      // Only backend can create/update coupons
+      allow write: if false;
+    }
+    
+    // ========== PAYMENTS COLLECTION ==========
+    
+    match /payments/{paymentId} {
+      // Read: user who made the payment
+      allow read: if isAuth() && request.auth.uid == resource.data.userId;
+      
+      // Only backend can write payment records
+      allow write: if false;
+    }
+    
+    // ========== SUBSCRIPTIONS COLLECTION ==========
+    
+    match /subscriptions/{subscriptionId} {
+      // Read: PRO owner of subscription
+      allow read: if isAuth() && request.auth.uid == resource.data.proId;
+      
+      // Only backend (webhooks) can write subscriptions
+      allow write: if false;
+    }
+    
+    // ========== NOTIFICATIONS COLLECTION ==========
+    
+    match /notifications/{notificationId} {
+      // Read: recipient of notification
+      allow read: if isAuth() && request.auth.uid == resource.data.userId;
+      
+      // Update: mark as read (user only)
+      allow update: if isAuth() && 
+        request.auth.uid == resource.data.userId &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
+      
+      // Only backend can create/delete notifications
+      allow create, delete: if false;
+    }
+    
+    // ========== REVIEWS COLLECTION ==========
+    
+    match /reviews/{reviewId} {
+      // Public read access
+      allow read: if true;
+      
+      // Create: authenticated user who made the booking
+      allow create: if isAuth() && 
+        request.auth.uid == request.resource.data.userId &&
+        exists(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId));
+      
+      // Update: only review author
+      allow update: if isAuth() && request.auth.uid == resource.data.userId;
+      
+      // Delete: only review author or backend
+      allow delete: if isAuth() && request.auth.uid == resource.data.userId;
+    }
+    
+    // ========== AUDIT LOGS COLLECTION ==========
+    
+    match /audit_logs/{logId} {
+      // No client read/write access
+      // Only backend (Admin SDK) can write audit logs
+      allow read, write: if false;
+    }
+    
+    // ========== FALLBACK RULE ==========
+    
+    // Deny access to any other collections not explicitly defined
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

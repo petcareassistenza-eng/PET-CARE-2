@@ -4,9 +4,9 @@
  */
 
 import { Request, Response } from 'express';
-import admin from 'firebase-admin';
+import { getDb } from '../utils/firebaseAdmin';
 
-const db = admin.firestore();
+const db = getDb();
 
 /**
  * Get PayPal OAuth Access Token

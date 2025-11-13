@@ -5,7 +5,8 @@
 
 import { readFileSync } from 'fs';
 
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
+import type { ServiceAccount } from 'firebase-admin';
 
 let app: admin.app.App | null = null;
 
@@ -15,7 +16,7 @@ let app: admin.app.App | null = null;
  */
 export function getAdminApp(): admin.app.App {
   if (!app) {
-    if (admin.apps.length) {
+    if (admin.apps && admin.apps.length > 0) {
       app = admin.app();
     } else {
       const isCloudRun = process.env.K_SERVICE !== undefined;
@@ -24,8 +25,9 @@ export function getAdminApp(): admin.app.App {
         // Cloud Run: automatic authentication via service account
         console.log('🔥 Firebase Admin: Initializing with Cloud Run service account');
         app = admin.initializeApp({
+          projectId: process.env.FIREBASE_PROJECT_ID || 'pet-care-9790d',
           storageBucket:
-            process.env.FIREBASE_STORAGE_BUCKET || 'pet-care-9790d.appspot.com',
+            process.env.FIREBASE_STORAGE_BUCKET || 'pet-care-9790d.firebasestorage.app',
         });
       } else {
         // Local development: use service account key file
@@ -34,12 +36,15 @@ export function getAdminApp(): admin.app.App {
         console.log(`🔥 Firebase Admin: Initializing with key file: ${keyPath}`);
 
         try {
-          const serviceAccount = JSON.parse(readFileSync(keyPath, 'utf8'));
+          const serviceAccount = JSON.parse(
+            readFileSync(keyPath, 'utf8'),
+          ) as ServiceAccount;
           app = admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
+            projectId: process.env.FIREBASE_PROJECT_ID || 'pet-care-9790d',
             storageBucket:
               process.env.FIREBASE_STORAGE_BUCKET ||
-              serviceAccount.project_id + '.appspot.com',
+              'pet-care-9790d.firebasestorage.app',
           });
         } catch (error: any) {
           console.error('❌ Failed to initialize Firebase Admin SDK:');

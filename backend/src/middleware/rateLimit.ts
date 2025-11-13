@@ -49,3 +49,39 @@ export const webhookLimiter = rateLimit({
     return req.headers['stripe-signature'] !== undefined
   },
 })
+
+/**
+ * Rate limiter per operazioni di scrittura (50 req/15min)
+ * Protegge endpoint POST/PUT/DELETE
+ */
+export const writeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minuti
+  max: 50,
+  message: { ok: false, message: 'Too many write requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+/**
+ * Rate limiter per endpoint pagamenti (30 req/15min)
+ * Protegge checkout e transazioni
+ */
+export const paymentsLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: { ok: false, message: 'Too many payment requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+/**
+ * Rate limiter per operazioni admin (100 req/15min)
+ * Protezione endpoint amministrativi
+ */
+export const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { ok: false, message: 'Too many admin requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})

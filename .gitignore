@@ -147,3 +147,6 @@ test-results/
 # Documentation
 # ==========================================
 .vscode/
+KEYS_CONFIGURED.md
+PRODUCTION_READY_CHECKLIST.md
+CREDENTIALS_VAULT.md

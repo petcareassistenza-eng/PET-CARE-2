@@ -1,3 +1,4 @@
+import { getDb } from '../utils/firebaseAdmin';
 import express from 'express';
 import * as admin from 'firebase-admin';
 
@@ -13,7 +14,7 @@ async function requireAdmin(req: any, res: any, next: any) {
     const token = hdr.startsWith('Bearer ') ? hdr.slice(7) : '';
     const dec = await admin.auth().verifyIdToken(token);
     
-    const db = admin.firestore();
+    const db = getDb();
     const userDoc = await db.collection('users').doc(dec.uid).get();
     
     if (userDoc.exists && userDoc.data()?.role === 'admin') {
@@ -81,7 +82,7 @@ router.post('/cleanup-locks/:proId', requireAdmin, async (req, res) => {
  */
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
-    const db = admin.firestore();
+    const db = getDb();
     
     // Count documents in various collections
     const [prosSnap, bookingsSnap, usersSnap] = await Promise.all([
@@ -152,7 +153,7 @@ router.get('/stats', requireAdmin, async (req, res) => {
  */
 router.get('/analytics', requireAdmin, async (req, res) => {
   try {
-    const db = admin.firestore();
+    const db = getDb();
     const period = req.query.period as string || '30d';
     
     // Calculate date range
@@ -213,7 +214,7 @@ router.post('/refund/:bookingId', requireAdmin, async (req, res) => {
     const bookingId = req.params.bookingId;
     const { amount, reason } = req.body;
     
-    const db = admin.firestore();
+    const db = getDb();
     const bookingDoc = await db.doc(`bookings/${bookingId}`).get();
     
     if (!bookingDoc.exists) {
@@ -316,7 +317,7 @@ router.post('/refund/:bookingId', requireAdmin, async (req, res) => {
  */
 router.get('/users', requireAdmin, async (req, res) => {
   try {
-    const db = admin.firestore();
+    const db = getDb();
     const role = req.query.role as string;
     const limit = parseInt(req.query.limit as string) || 50;
     
@@ -358,7 +359,7 @@ router.post('/export/csv', requireAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Invalid collection' });
     }
     
-    const db = admin.firestore();
+    const db = getDb();
     let query = db.collection(collection);
     
     // Apply filters

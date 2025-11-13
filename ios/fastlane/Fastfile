@@ -1,0 +1,192 @@
+# Fastfile - MyPetCareApp iOS Deployment
+# Version: 1.0
+# Date: 2025-11-12
+
+default_platform(:ios)
+
+platform :ios do
+  
+  desc "🚀 Build & Upload to App Store (Production)"
+  desc "Usage: bundle exec fastlane ios release --env prod"
+  lane :release do
+    # Load environment-specific configuration
+    env_name = ENV["FASTLANE_ENV"] || "prod"
+    puts "📦 Building iOS release for environment: #{env_name}"
+    
+    # App Store Connect API Key (from environment variables)
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"], # Base64 encoded or raw key content
+      duration: 1200,
+      in_house: false
+    )
+
+    # Setup CI environment if running in CI/CD
+    if ENV["CI"]
+      puts "🔧 Setting up CI environment..."
+      setup_ci
+    end
+
+    # Ensure CocoaPods are up to date
+    puts "📦 Installing CocoaPods dependencies..."
+    cocoapods(
+      clean_install: true,
+      podfile: "./Podfile"
+    )
+
+    # Build IPA (export from Flutter build)
+    puts "🔨 Building IPA with Xcode..."
+    build_app(
+      scheme: ENV["IOS_SCHEME"] || "Runner",
+      export_method: "app-store",
+      workspace: "Runner.xcworkspace",
+      output_directory: "./build",
+      output_name: "MyPetCareApp.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          ENV["IOS_BUNDLE_ID"] || "com.mypetcareapp.ios" => ENV["IOS_PROVISIONING_PROFILE_NAME"] || "match AppStore com.mypetcareapp.ios"
+        }
+      }
+    )
+
+    # Generate release notes from git commits
+    puts "📝 Generating release notes..."
+    notes = changelog_from_git_commits(
+      commits_count: 50,
+      pretty: "- %s",
+      merge_commit_filtering: "exclude_merges"
+    )
+
+    # Upload to App Store Connect (TestFlight + App Review)
+    puts "☁️ Uploading to App Store Connect..."
+    upload_to_app_store(
+      api_key: api_key,
+      skip_metadata: true,           # Don't update app metadata
+      skip_screenshots: true,         # Don't update screenshots
+      submit_for_review: false,       # Set to true for automatic submission
+      automatic_release: false,       # Manual release after approval
+      release_notes: {
+        "default" => notes,
+        "it-IT" => notes
+      },
+      submission_information: {
+        add_id_info_uses_idfa: false  # Disable IDFA tracking
+      },
+      notify_external_testers: true,  # Notify TestFlight testers
+      precheck_include_in_app_purchases: false
+    )
+
+    # Success message
+    puts "✅ iOS release uploaded successfully!"
+    puts "📱 Check App Store Connect → TestFlight"
+    puts "🔗 https://appstoreconnect.apple.com/"
+  end
+
+  desc "🧪 Build & Upload to TestFlight (Beta Testing)"
+  desc "Usage: bundle exec fastlane ios beta --env prod"
+  lane :beta do
+    # App Store Connect API Key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      duration: 1200,
+      in_house: false
+    )
+
+    # Setup CI if needed
+    setup_ci if ENV["CI"]
+
+    # CocoaPods
+    cocoapods(clean_install: true)
+
+    # Build IPA
+    build_app(
+      scheme: ENV["IOS_SCHEME"] || "Runner",
+      export_method: "app-store",
+      workspace: "Runner.xcworkspace",
+      output_directory: "./build",
+      output_name: "MyPetCareApp-Beta.ipa",
+      clean: true
+    )
+
+    # Upload to TestFlight only
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: false,
+      notify_external_testers: true,
+      changelog: changelog_from_git_commits(commits_count: 20, pretty: "- %s")
+    )
+
+    puts "✅ Beta build uploaded to TestFlight!"
+  end
+
+  desc "📸 Take screenshots for App Store"
+  desc "Usage: bundle exec fastlane ios screenshots"
+  lane :screenshots do
+    snapshot(
+      scheme: "Runner",
+      devices: [
+        "iPhone 15 Pro Max",
+        "iPhone 15 Pro",
+        "iPhone 15",
+        "iPhone SE (3rd generation)",
+        "iPad Pro (12.9-inch) (6th generation)"
+      ],
+      languages: ["it-IT", "en-US"],
+      output_directory: "./fastlane/screenshots",
+      clear_previous_screenshots: true
+    )
+    
+    puts "✅ Screenshots taken successfully!"
+    puts "📁 Location: ./fastlane/screenshots/"
+  end
+
+  desc "🔍 Run tests"
+  desc "Usage: bundle exec fastlane ios test"
+  lane :test do
+    run_tests(
+      scheme: "Runner",
+      devices: ["iPhone 15 Pro"],
+      clean: true
+    )
+  end
+
+  desc "🔐 Sync certificates and provisioning profiles"
+  desc "Usage: bundle exec fastlane ios sync_certificates"
+  lane :sync_certificates do
+    # Use match for certificate management (recommended)
+    # match(
+    #   type: "appstore",
+    #   readonly: true,
+    #   app_identifier: ENV["IOS_BUNDLE_ID"]
+    # )
+    
+    # Or use cert/sigh for manual management
+    cert
+    sigh(
+      app_identifier: ENV["IOS_BUNDLE_ID"] || "com.mypetcareapp.ios"
+    )
+  end
+
+  desc "🧹 Clean build artifacts"
+  lane :clean do
+    clean_build_artifacts
+    clear_derived_data
+    
+    puts "✅ Build artifacts cleaned!"
+  end
+
+  # Error handling
+  error do |lane, exception|
+    puts "❌ Error in lane #{lane}: #{exception.message}"
+    
+    # Send notification (optional - integrate with Slack, email, etc.)
+    # slack(
+    #   message: "iOS build failed: #{exception.message}",
+    #   success: false
+    # )
+  end
+end

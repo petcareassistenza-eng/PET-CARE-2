@@ -1,0 +1,137 @@
+{
+  "name": "MyPetCareApp - Servizi per Animali",
+  "short_name": "PetCare",
+  "description": "Trova veterinari, toelettatori e pet sitter vicino a te. Prenota servizi per i tuoi animali domestici.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1C8275",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "it-IT",
+  "dir": "ltr",
+  "categories": ["lifestyle", "health", "business"],
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "label": "Homepage MyPetCare"
+    },
+    {
+      "src": "/screenshots/search.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "label": "Ricerca Professionisti"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Cerca Veterinari",
+      "short_name": "Veterinari",
+      "description": "Trova veterinari vicino a te",
+      "url": "/search?category=vet",
+      "icons": [
+        {
+          "src": "/icons/shortcut-vet.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Cerca Toelettatori",
+      "short_name": "Toelettatori",
+      "description": "Trova toelettatori vicino a te",
+      "url": "/search?category=groomer",
+      "icons": [
+        {
+          "src": "/icons/shortcut-groomer.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Le Mie Prenotazioni",
+      "short_name": "Prenotazioni",
+      "description": "Visualizza le tue prenotazioni",
+      "url": "/bookings",
+      "icons": [
+        {
+          "src": "/icons/shortcut-bookings.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.mypetcareapp.ios",
+      "id": "com.mypetcareapp.ios"
+    }
+  ],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}

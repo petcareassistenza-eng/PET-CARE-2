@@ -1,0 +1,622 @@
+openapi: 3.0.3
+info:
+  title: MyPetCare API
+  version: "1.0.0"
+  description: |
+    Backend REST API per MyPetCare - Piattaforma di prenotazione servizi per animali domestici
+    
+    ## Features
+    - ✅ Authentication via Firebase Auth
+    - ✅ Booking management (create, cancel, history)
+    - ✅ PRO directory with geospatial search
+    - ✅ Reviews and ratings
+    - ✅ Payment processing (Stripe/PayPal)
+    - ✅ GDPR compliance (data export & deletion)
+    - ✅ Real-time messaging (chat support)
+    
+    ## Rate Limiting
+    - General API: 100 requests/15min
+    - Authentication: 5 requests/15min
+    - GDPR endpoints: 10 requests/hour
+    
+  contact:
+    name: MyPetCare API Support
+    email: support@mypetcareapp.org
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.mypetcareapp.org
+    description: Production server
+  - url: https://api-staging.mypetcareapp.org
+    description: Staging server
+  - url: http://localhost:8080
+    description: Local development
+
+tags:
+  - name: Health
+    description: Health check and monitoring endpoints
+  - name: PRO
+    description: Professional service providers directory
+  - name: Bookings
+    description: Booking management and scheduling
+  - name: Reviews
+    description: User reviews and ratings
+  - name: Payments
+    description: Payment processing and transactions
+  - name: GDPR
+    description: Data privacy and compliance endpoints
+  - name: Messages
+    description: Real-time messaging and chat
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Firebase Authentication ID token
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Resource not found"
+        code:
+          type: string
+          example: "NOT_FOUND"
+
+    GeoPoint:
+      type: object
+      required: [lat, lng]
+      properties:
+        lat:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          example: 45.4642
+        lng:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          example: 9.1900
+
+    Pro:
+      type: object
+      required: [id, displayName, categories, geo, visible]
+      properties:
+        id:
+          type: string
+          example: "pro_123456"
+        displayName:
+          type: string
+          example: "Dr. Mario Rossi - Veterinario"
+        bio:
+          type: string
+          example: "Veterinario specializzato in piccoli animali con 15 anni di esperienza"
+        categories:
+          type: array
+          items:
+            type: string
+          example: ["veterinario", "grooming"]
+        geo:
+          $ref: '#/components/schemas/GeoPoint'
+        geohash:
+          type: string
+          example: "u0nd9"
+        address:
+          type: string
+          example: "Via Roma 123, Milano"
+        phone:
+          type: string
+          example: "+39 02 1234567"
+        email:
+          type: string
+          format: email
+          example: "info@vetrossi.it"
+        website:
+          type: string
+          format: uri
+          example: "https://www.vetrossi.it"
+        photoURL:
+          type: string
+          format: uri
+        rating:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 5
+          example: 4.8
+        reviewCount:
+          type: integer
+          minimum: 0
+          example: 127
+        visible:
+          type: boolean
+          example: true
+        verified:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+
+    Booking:
+      type: object
+      required: [id, proId, userId, date, status]
+      properties:
+        id:
+          type: string
+          example: "booking_789012"
+        proId:
+          type: string
+          example: "pro_123456"
+        userId:
+          type: string
+          example: "user_345678"
+        date:
+          type: string
+          format: date-time
+          example: "2024-12-15T10:00:00Z"
+        serviceId:
+          type: string
+          example: "service_grooming_basic"
+        status:
+          type: string
+          enum: [pending, confirmed, completed, cancelled]
+          example: "confirmed"
+        notes:
+          type: string
+          example: "Il mio cane ha paura dei rumori forti"
+        totalAmount:
+          type: number
+          format: double
+          example: 45.00
+        currency:
+          type: string
+          example: "EUR"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Review:
+      type: object
+      required: [id, proId, userId, rating, comment]
+      properties:
+        id:
+          type: string
+          example: "review_901234"
+        proId:
+          type: string
+        userId:
+          type: string
+        bookingId:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        comment:
+          type: string
+          example: "Servizio eccellente, molto professionale!"
+        createdAt:
+          type: string
+          format: date-time
+
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      description: Verifica che il servizio sia attivo e funzionante
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  status:
+                    type: string
+                    example: "healthy"
+
+  /readiness:
+    get:
+      summary: Readiness check
+      description: Verifica che il servizio sia pronto a ricevere traffico
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  ready:
+                    type: boolean
+                    example: true
+                  cache:
+                    type: object
+
+  /version:
+    get:
+      summary: Version information
+      description: Restituisce informazioni sulla versione deployata
+      tags: [Health]
+      responses:
+        '200':
+          description: Version info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  version:
+                    type: string
+                    example: "a1b2c3d4e5f6"
+                  environment:
+                    type: string
+                    example: "production"
+                  builtAt:
+                    type: string
+                    format: date-time
+
+  /metrics/cache:
+    get:
+      summary: Cache metrics
+      description: Espone metriche della cache in-memory
+      tags: [Health]
+      responses:
+        '200':
+          description: Cache statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  cache:
+                    type: object
+                    properties:
+                      hits:
+                        type: integer
+                      misses:
+                        type: integer
+                      entries:
+                        type: integer
+                      hitRate:
+                        type: string
+                        example: "87.5%"
+
+  /api/pros:
+    get:
+      summary: Lista PRO con filtri e geosearch
+      description: |
+        Restituisce lista di professionisti filtrata per categoria e posizione geografica.
+        Supporta cache HTTP con ETag (60s TTL).
+      tags: [PRO]
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filtra per categoria (es. "veterinario")
+        - in: query
+          name: nearLat
+          schema:
+            type: number
+            format: double
+          description: Latitudine centro ricerca (richiede nearLng)
+        - in: query
+          name: nearLng
+          schema:
+            type: number
+            format: double
+          description: Longitudine centro ricerca (richiede nearLat)
+        - in: query
+          name: radiusKm
+          schema:
+            type: number
+            format: double
+            minimum: 0.1
+            maximum: 100
+            default: 10
+          description: Raggio di ricerca in km (default 10)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Numero massimo di risultati
+      responses:
+        '200':
+          description: Lista PRO
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: Weak ETag per cache validation
+            Cache-Control:
+              schema:
+                type: string
+              description: max-age=60, must-revalidate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pro'
+                  count:
+                    type: integer
+                    example: 15
+        '304':
+          description: Not Modified (ETag match)
+
+  /api/bookings:
+    post:
+      summary: Crea prenotazione
+      description: Crea una nuova prenotazione per un servizio PRO
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [proId, date, serviceId]
+              properties:
+                proId:
+                  type: string
+                  example: "pro_123456"
+                date:
+                  type: string
+                  format: date-time
+                  example: "2024-12-15T10:00:00Z"
+                serviceId:
+                  type: string
+                  example: "service_grooming_basic"
+                notes:
+                  type: string
+                  example: "Il mio cane ha paura dei rumori forti"
+      responses:
+        '201':
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Booking'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/bookings/{bookingId}:
+    get:
+      summary: Dettagli prenotazione
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Booking'
+        '404':
+          description: Booking not found
+
+    delete:
+      summary: Cancella prenotazione
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Booking cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Booking cancelled successfully"
+
+  /api/reviews:
+    post:
+      summary: Crea recensione
+      tags: [Reviews]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [proId, rating, comment]
+              properties:
+                proId:
+                  type: string
+                bookingId:
+                  type: string
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                comment:
+                  type: string
+                  minLength: 10
+                  maxLength: 1000
+      responses:
+        '201':
+          description: Review created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Review'
+
+  /api/user/data:
+    get:
+      summary: Esporta dati utente (GDPR Art. 15)
+      description: |
+        Restituisce tutti i dati personali dell'utente in formato JSON.
+        Rate limit: 10 richieste/ora
+      tags: [GDPR]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User data export
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      profile:
+                        type: object
+                      bookings:
+                        type: array
+                      reviews:
+                        type: array
+                      payments:
+                        type: array
+        '401':
+          description: Unauthorized
+        '429':
+          description: Rate limit exceeded
+
+  /api/user/delete:
+    delete:
+      summary: Diritto all'oblio (GDPR Art. 17)
+      description: |
+        Anonimizza i dati personali dell'utente preservando record finanziari.
+        Soft-delete con anonymization selettiva (drop/mask/hash/keep).
+        Rate limit: 10 richieste/ora
+      tags: [GDPR]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User data anonymized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  message:
+                    type: string
+                    example: "User data anonymized successfully"
+                  deleted:
+                    type: object
+                    properties:
+                      profile:
+                        type: boolean
+                      reviews:
+                        type: integer
+                      messages:
+                        type: integer
+        '401':
+          description: Unauthorized
+        '429':
+          description: Rate limit exceeded
+
+  /api/payments/webhook:
+    post:
+      summary: Stripe webhook handler
+      description: Gestisce eventi Stripe (payment_intent.succeeded, checkout.session.completed)
+      tags: [Payments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook processed
+        '400':
+          description: Invalid signature
+
+security:
+  - BearerAuth: []

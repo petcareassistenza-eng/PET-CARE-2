@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPetCare - Prenota servizi per il tuo animale</title>
+    <meta name="description" content="MyPetCare: trova veterinari, toelettatori e pet sitter vicino a te. Prenota servizi per i tuoi animali domestici in pochi click.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1C8275 0%, #145B52 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+        }
+        .button {
+            display: inline-block;
+            background: white;
+            color: #1C8275;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+        .feature {
+            text-align: center;
+            padding: 30px;
+        }
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .feature h3 {
+            color: #1C8275;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        footer {
+            background: #2C3E50;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        footer a {
+            color: #1C8275;
+            text-decoration: none;
+        }
+    </style>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- Theme color -->
+  <meta name="theme-color" content="#1C8275">
+  <meta name="msapplication-TileColor" content="#1C8275">
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-128.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16.png">
+  
+  <!-- iOS meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PetCare">
+  
+  <!-- Windows meta tags -->
+  <meta name="msapplication-TileImage" content="/icons/icon-144.png">
+
+</head>
+<body>
+    <div class="hero">
+        <h1>🐾 MyPetCare</h1>
+        <p>Prenota servizi per il tuo animale domestico</p>
+        <a href="#" class="button">📱 Scarica l'App</a>
+    </div>
+
+    <div class="container">
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🏥</div>
+                <h3>Veterinari</h3>
+                <p>Trova veterinari qualificati vicino a te e prenota visite</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">✂️</div>
+                <h3>Toelettatori</h3>
+                <p>Servizi di toelettatura professionale per il tuo pet</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏠</div>
+                <h3>Pet Sitter</h3>
+                <p>Affida il tuo animale a professionisti fidati</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MyPetCare. Tutti i diritti riservati.</p>
+        <p style="margin-top: 20px;">
+            <a href="https://mypetcareapp.org/privacy">Privacy Policy</a> | 
+            <a href="https://mypetcareapp.org/terms">Termini di Servizio</a> | 
+            <a href="https://mypetcareapp.org/support">Supporto</a>
+        </p>
+        <p style="margin-top: 20px;">
+            <a href="mailto:support@mypetcareapp.org">support@mypetcareapp.org</a>
+        </p>
+    </footer>
+<!-- Google Consent Mode v2 -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  
+  // Default consent state (denied)
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'functionality_storage': 'denied',
+    'personalization_storage': 'denied',
+    'security_storage': 'granted',  // Always granted for security
+    'wait_for_update': 500
+  });
+  
+  // Load saved consent from localStorage
+  (function() {
+    var consent = localStorage.getItem('cookie_consent');
+    if (consent) {
+      var consentData = JSON.parse(consent);
+      gtag('consent', 'update', consentData);
+    }
+  })();
+</script>
+
+<!-- Google Analytics 4 (replace G-XXXXXXX with your Measurement ID) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXX', {
+    'anonymize_ip': true,
+    'cookie_flags': 'SameSite=None;Secure'
+  });
+</script>
+
+<!-- Cookie Consent Banner Styles -->
+<style>
+  #cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1C8275;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    z-index: 10000;
+    display: none;
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  #cookie-consent-banner.show {
+    display: block;
+  }
+  
+  .cookie-consent-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .cookie-consent-text {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .cookie-consent-text h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .cookie-consent-text p {
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  
+  .cookie-consent-text a {
+    color: #FFF;
+    text-decoration: underline;
+  }
+  
+  .cookie-consent-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .cookie-consent-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .cookie-consent-btn-accept {
+    background: white;
+    color: #1C8275;
+  }
+  
+  .cookie-consent-btn-accept:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
+  }
+  
+  .cookie-consent-btn-reject {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+  
+  .cookie-consent-btn-reject:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .cookie-consent-btn-customize {
+    background: rgba(255,255,255,0.2);
+    color: white;
+  }
+  
+  .cookie-consent-btn-customize:hover {
+    background: rgba(255,255,255,0.3);
+  }
+  
+  /* Cookie Settings Modal */
+  #cookie-settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 10001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  #cookie-settings-modal.show {
+    display: flex;
+  }
+  
+  .cookie-settings-content {
+    background: white;
+    color: #333;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .cookie-settings-content h3 {
+    margin-bottom: 20px;
+    color: #1C8275;
+  }
+  
+  .cookie-category {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .cookie-category:last-child {
+    border-bottom: none;
+  }
+  
+  .cookie-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .cookie-toggle label {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .cookie-toggle input[type="checkbox"] {
+    width: 50px;
+    height: 26px;
+    position: relative;
+    appearance: none;
+    background: #ccc;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .cookie-toggle input[type="checkbox"]:checked {
+    background: #1C8275;
+  }
+  
+  .cookie-toggle input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+  }
+  
+  .cookie-toggle input[type="checkbox"]:checked::before {
+    left: 26px;
+  }
+  
+  .cookie-toggle input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .cookie-description {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  .cookie-settings-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .cookie-settings-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .cookie-settings-buttons .btn-save {
+    background: #1C8275;
+    color: white;
+  }
+  
+  .cookie-settings-buttons .btn-save:hover {
+    background: #145B52;
+  }
+  
+  .cookie-settings-buttons .btn-cancel {
+    background: #eee;
+    color: #333;
+  }
+  
+  .cookie-settings-buttons .btn-cancel:hover {
+    background: #ddd;
+  }
+  
+  @media (max-width: 768px) {
+    .cookie-consent-content {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .cookie-consent-buttons {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .cookie-consent-btn {
+      flex: 1;
+      min-width: 100px;
+    }
+  }
+</style>
+
+<!-- Cookie Consent Banner HTML -->
+<div id="cookie-consent-banner">
+  <div class="cookie-consent-content">
+    <div class="cookie-consent-text">
+      <h3>🍪 Utilizziamo i Cookie</h3>
+      <p>
+        Utilizziamo cookie e tecnologie simili per migliorare la tua esperienza sul nostro sito.
+        Consulta la nostra <a href="/privacy.html">Privacy Policy</a> per maggiori informazioni.
+      </p>
+    </div>
+    <div class="cookie-consent-buttons">
+      <button class="cookie-consent-btn cookie-consent-btn-accept" onclick="acceptAllCookies()">
+        Accetta Tutti
+      </button>
+      <button class="cookie-consent-btn cookie-consent-btn-reject" onclick="rejectAllCookies()">
+        Rifiuta Tutti
+      </button>
+      <button class="cookie-consent-btn cookie-consent-btn-customize" onclick="showCookieSettings()">
+        Personalizza
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Settings Modal -->
+<div id="cookie-settings-modal">
+  <div class="cookie-settings-content">
+    <h3>⚙️ Impostazioni Cookie</h3>
+    <p style="margin-bottom: 20px;">Scegli quali cookie desideri accettare. I cookie necessari sono sempre attivi.</p>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-necessary" checked disabled>
+          Cookie Necessari
+        </label>
+      </div>
+      <div class="cookie-description">
+        Questi cookie sono essenziali per il funzionamento del sito e non possono essere disabilitati.
+      </div>
+    </div>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-analytics">
+          Cookie Analitici
+        </label>
+      </div>
+      <div class="cookie-description">
+        Ci aiutano a capire come i visitatori utilizzano il sito, raccogliendo informazioni in forma anonima.
+      </div>
+    </div>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-functional">
+          Cookie Funzionali
+        </label>
+      </div>
+      <div class="cookie-description">
+        Permettono di ricordare le tue preferenze e migliorare la tua esperienza personalizzata.
+      </div>
+    </div>
+    
+    <div class="cookie-category">
+      <div class="cookie-toggle">
+        <label>
+          <input type="checkbox" id="consent-marketing">
+          Cookie di Marketing
+        </label>
+      </div>
+      <div class="cookie-description">
+        Utilizzati per mostrare contenuti pubblicitari più rilevanti per te e i tuoi interessi.
+      </div>
+    </div>
+    
+    <div class="cookie-settings-buttons">
+      <button class="btn-save" onclick="saveCustomCookieSettings()">Salva Preferenze</button>
+      <button class="btn-cancel" onclick="closeCookieSettings()">Annulla</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script>
+  // Check if user has already made a choice
+  (function() {
+    var consent = localStorage.getItem('cookie_consent');
+    if (!consent) {
+      // Show banner after 1 second
+      setTimeout(function() {
+        document.getElementById('cookie-consent-banner').classList.add('show');
+      }, 1000);
+    }
+  })();
+  
+  function acceptAllCookies() {
+    var consentData = {
+      'ad_storage': 'granted',
+      'ad_user_data': 'granted',
+      'ad_personalization': 'granted',
+      'analytics_storage': 'granted',
+      'functionality_storage': 'granted',
+      'personalization_storage': 'granted'
+    };
+    
+    gtag('consent', 'update', consentData);
+    localStorage.setItem('cookie_consent', JSON.stringify(consentData));
+    localStorage.setItem('cookie_consent_date', new Date().toISOString());
+    
+    hideCookieBanner();
+  }
+  
+  function rejectAllCookies() {
+    var consentData = {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'functionality_storage': 'denied',
+      'personalization_storage': 'denied'
+    };
+    
+    gtag('consent', 'update', consentData);
+    localStorage.setItem('cookie_consent', JSON.stringify(consentData));
+    localStorage.setItem('cookie_consent_date', new Date().toISOString());
+    
+    hideCookieBanner();
+  }
+  
+  function showCookieSettings() {
+    // Load current settings
+    var consent = localStorage.getItem('cookie_consent');
+    if (consent) {
+      var consentData = JSON.parse(consent);
+      document.getElementById('consent-analytics').checked = consentData.analytics_storage === 'granted';
+      document.getElementById('consent-functional').checked = consentData.functionality_storage === 'granted';
+      document.getElementById('consent-marketing').checked = consentData.ad_storage === 'granted';
+    }
+    
+    document.getElementById('cookie-settings-modal').classList.add('show');
+  }
+  
+  function closeCookieSettings() {
+    document.getElementById('cookie-settings-modal').classList.remove('show');
+  }
+  
+  function saveCustomCookieSettings() {
+    var analytics = document.getElementById('consent-analytics').checked;
+    var functional = document.getElementById('consent-functional').checked;
+    var marketing = document.getElementById('consent-marketing').checked;
+    
+    var consentData = {
+      'ad_storage': marketing ? 'granted' : 'denied',
+      'ad_user_data': marketing ? 'granted' : 'denied',
+      'ad_personalization': marketing ? 'granted' : 'denied',
+      'analytics_storage': analytics ? 'granted' : 'denied',
+      'functionality_storage': functional ? 'granted' : 'denied',
+      'personalization_storage': functional ? 'granted' : 'denied'
+    };
+    
+    gtag('consent', 'update', consentData);
+    localStorage.setItem('cookie_consent', JSON.stringify(consentData));
+    localStorage.setItem('cookie_consent_date', new Date().toISOString());
+    
+    closeCookieSettings();
+    hideCookieBanner();
+  }
+  
+  function hideCookieBanner() {
+    document.getElementById('cookie-consent-banner').classList.remove('show');
+  }
+  
+  // Global function to revoke consent (can be called from Privacy Policy page)
+  window.revokeCookieConsent = function() {
+    localStorage.removeItem('cookie_consent');
+    localStorage.removeItem('cookie_consent_date');
+    location.reload();
+  };
+</script>
+
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function() {
+        navigator.serviceWorker.register("/service-worker.js")
+          .then(function(registration) {
+            console.log("✅ Service Worker registered:", registration.scope);
+            
+            // Check for updates
+            registration.addEventListener("updatefound", function() {
+              const newWorker = registration.installing;
+              newWorker.addEventListener("statechange", function() {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  console.log("🔄 New Service Worker available. Refresh to update.");
+                  // Optional: Show update notification to user
+                }
+              });
+            });
+          })
+          .catch(function(error) {
+            console.log("❌ Service Worker registration failed:", error);
+          });
+      });
+      
+      // Handle Service Worker updates
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", function() {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
