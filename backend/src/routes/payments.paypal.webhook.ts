@@ -1,6 +1,4 @@
-// backend/src/routes/payments.paypal.webhook.ts
-// Webhook handler PayPal per eventi subscription/payment
-
+// src/routes/payments.paypal.webhook.ts
 import { Router } from 'express';
 import fetch from 'node-fetch';
 import { db } from '../firebase';
@@ -8,24 +6,10 @@ import { config } from '../config';
 
 const router = Router();
 
-/**
- * POST /api/payments/paypal/webhook
- * Gestisce webhook PayPal per eventi subscription
- * 
- * Eventi gestiti:
- * - BILLING.SUBSCRIPTION.CREATED
- * - BILLING.SUBSCRIPTION.ACTIVATED
- * - BILLING.SUBSCRIPTION.UPDATED
- * - BILLING.SUBSCRIPTION.CANCELLED
- * - BILLING.SUBSCRIPTION.SUSPENDED
- * - BILLING.SUBSCRIPTION.EXPIRED
- * - PAYMENT.SALE.COMPLETED
- */
+// Verifica e gestione webhook PayPal
 router.post('/paypal/webhook', async (req, res) => {
   try {
     const body = req.body;
-
-    // Headers PayPal per verifica firma
     const transmissionId = req.header('paypal-transmission-id');
     const transmissionTime = req.header('paypal-transmission-time');
     const certUrl = req.header('paypal-cert-url');
@@ -33,7 +17,6 @@ router.post('/paypal/webhook', async (req, res) => {
     const transmissionSig = req.header('paypal-transmission-sig');
     const webhookId = config.paypalWebhookId;
 
-    // Verifica presenza headers
     if (
       !transmissionId ||
       !transmissionTime ||
@@ -41,11 +24,10 @@ router.post('/paypal/webhook', async (req, res) => {
       !authAlgo ||
       !transmissionSig
     ) {
-      console.error('❌ PayPal webhook: missing headers');
-      return res.status(400).send('Missing PayPal headers');
+      console.error('PayPal webhook headers missing');
+      return res.status(400).send('Missing headers');
     }
 
-    // Verifica firma webhook PayPal
     const token = await getPayPalAccessToken();
     const verifyResp = await fetch(
       `${config.paypalApi}/v1/notifications/verify-webhook-signature`,
@@ -68,110 +50,43 @@ router.post('/paypal/webhook', async (req, res) => {
     );
 
     const verifyData = (await verifyResp.json()) as any;
-
-    if (!verifyResp.ok || verifyData.verification_status !== 'SUCCESS') {
-      console.error('❌ PayPal webhook verification failed:', verifyData);
-      return res.status(400).send('Invalid PayPal signature');
+    if (
+      !verifyResp.ok ||
+      verifyData.verification_status !== 'SUCCESS'
+    ) {
+      console.error('PayPal webhook verification failed', verifyData);
+      return res.status(400).send('Invalid signature');
     }
 
     const eventType = body.event_type as string;
-    console.log(`✅ PayPal webhook received: ${eventType}`);
+    console.log('PayPal webhook event:', eventType);
 
-    // Gestione eventi subscription
     if (eventType.startsWith('BILLING.SUBSCRIPTION.')) {
-      await handleSubscriptionEvent(body);
-    }
+      const resource = body.resource;
+      const proId = (resource.custom_id || resource.id) as string | undefined;
+      const status = resource.status as string | undefined;
 
-    // Gestione eventi payment
-    if (eventType.startsWith('PAYMENT.')) {
-      await handlePaymentEvent(body);
+      if (!proId || !status) {
+        console.warn('PayPal webhook: missing proId or status');
+      } else {
+        const isActive = status === 'ACTIVE';
+        await db.collection('pros').doc(proId).update({
+          subscriptionStatus: isActive ? 'active' : 'inactive',
+          subscriptionProvider: 'paypal',
+          subscriptionPlan: resource.plan_id ?? null,
+          updatedAt: new Date()
+        });
+      }
     }
 
     return res.json({ received: true });
-  } catch (err: any) {
-    console.error('❌ PayPal webhook error:', err.message);
+  } catch (err) {
+    console.error('PayPal webhook error', err);
     return res.status(500).send('Webhook handler error');
   }
 });
 
-/**
- * Gestisce eventi subscription PayPal
- */
-async function handleSubscriptionEvent(body: any): Promise<void> {
-  const resource = body.resource;
-  const eventType = body.event_type as string;
-
-  // Recupera proId da custom_id o subscription_id
-  const proId = (resource.custom_id || resource.id) as string | undefined;
-  const status = resource.status as string | undefined;
-
-  if (!proId || !status) {
-    console.warn('⚠️  PayPal subscription event: missing proId or status');
-    return;
-  }
-
-  // Determina se subscription è attiva
-  const isActive = status === 'ACTIVE' || status === 'APPROVED';
-
-  // Aggiorna Firestore
-  await db
-    .collection('pros')
-    .doc(proId)
-    .update({
-      subscriptionStatus: isActive ? 'active' : 'inactive',
-      subscriptionProvider: 'paypal',
-      subscriptionPlan: resource.plan_id ?? null,
-      paypalOrderId: resource.id,
-      updatedAt: new Date()
-    });
-
-  console.log(`✅ PRO ${proId} PayPal subscription updated: ${eventType}, status=${status}`);
-}
-
-/**
- * Gestisce eventi payment PayPal
- */
-async function handlePaymentEvent(body: any): Promise<void> {
-  const resource = body.resource;
-  const eventType = body.event_type as string;
-
-  // Recupera proId da custom field
-  const proId = resource.custom as string | undefined;
-
-  if (!proId) {
-    console.warn('⚠️  PayPal payment event: missing proId in custom field');
-    return;
-  }
-
-  // Se pagamento completato, aggiorna lastPaymentAt
-  if (eventType === 'PAYMENT.SALE.COMPLETED') {
-    await db
-      .collection('pros')
-      .doc(proId)
-      .update({
-        lastPaymentAt: new Date(),
-        updatedAt: new Date()
-      });
-
-    console.log(`✅ PRO ${proId} PayPal payment completed: ${resource.id}`);
-  }
-}
-
-/**
- * Ottiene access token PayPal (riusa token cached)
- */
-let cachedPayPalToken: { accessToken: string; expiresAt: number } | null = null;
-
 async function getPayPalAccessToken(): Promise<string> {
-  // Riusa token se ancora valido
-  if (
-    cachedPayPalToken &&
-    Date.now() < cachedPayPalToken.expiresAt - 60000
-  ) {
-    return cachedPayPalToken.accessToken;
-  }
-
-  // Richiedi nuovo token
   const auth = Buffer.from(
     `${config.paypalClientId}:${config.paypalSecret}`
   ).toString('base64');
@@ -186,19 +101,12 @@ async function getPayPalAccessToken(): Promise<string> {
   });
 
   const data = (await resp.json()) as any;
-
   if (!resp.ok) {
-    console.error('❌ PayPal token error:', data);
-    throw new Error('PayPal authentication failed');
+    console.error('PayPal token error', data);
+    throw new Error('PayPal token error');
   }
 
-  // Cache token
-  cachedPayPalToken = {
-    accessToken: data.access_token as string,
-    expiresAt: Date.now() + (data.expires_in as number) * 1000
-  };
-
-  return cachedPayPalToken.accessToken;
+  return data.access_token as string;
 }
 
 export default router;

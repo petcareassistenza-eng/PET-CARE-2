@@ -1,25 +1,12 @@
 {
   "name": "mypetcare-backend",
   "version": "1.0.0",
-  "description": "MyPetCare Backend API - Node.js + TypeScript + Firebase + Express",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "lint": "eslint src/**/*.ts",
-    "test": "jest"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
-  "keywords": [
-    "mypetcare",
-    "backend",
-    "api",
-    "firebase",
-    "stripe",
-    "paypal"
-  ],
-  "author": "MyPetCare Team",
-  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -36,9 +23,5 @@
     "@types/node-fetch": "^2.6.12",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.0"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
   }
 }
