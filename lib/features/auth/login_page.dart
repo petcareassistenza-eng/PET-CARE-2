@@ -174,8 +174,48 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Logo
-                    const BrandLogo(size: 140),
+                    // 🏠🐾 Logo Casa + Zampa (stesso dello splash)
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 16,
+                            offset: const Offset(0, 8),
+                            color: Colors.black.withOpacity(0.15),
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/images/my_pet_care_splash_logo.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.pets,
+                          size: 100,
+                          color: Color(0xFF247B75),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Nome app
+                    Text(
+                      'MyPetCare',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF247B75),
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Tutti i servizi per il tuo pet',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.black54,
+                          ),
+                    ),
                     const SizedBox(height: 32),
                     
                     // Email Field

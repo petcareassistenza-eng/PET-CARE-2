@@ -5,24 +5,24 @@ import '../features/auth/login_page.dart';
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  void _goToLogin(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const LoginPage()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    // ✅ LOGO SEMPRE VISIBILE - Non sparisce più!
+    // L'utente deve fare tap per procedere
     return Scaffold(
       backgroundColor: AppBrand.primary,
       body: SafeArea(
         child: Center(
           child: GestureDetector(
-            onTap: () => _goToLogin(context),
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+              );
+            },
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo centrale statico
+                // 🏠🐾 Logo centrale STATICO - Non scompare
                 Container(
                   padding: const EdgeInsets.all(AppBrand.spacingL),
                   decoration: BoxDecoration(
@@ -42,6 +42,11 @@ class SplashScreen extends StatelessWidget {
                     width: 140,
                     height: 140,
                     fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.pets,
+                      size: 140,
+                      color: AppBrand.primary,
+                    ),
                   ),
                 ),
                 const SizedBox(height: AppBrand.spacingL),
@@ -50,6 +55,7 @@ class SplashScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
                         letterSpacing: 1.5,
+                        fontWeight: FontWeight.bold,
                       ),
                 ),
                 const SizedBox(height: AppBrand.spacingS),
@@ -59,12 +65,35 @@ class SplashScreen extends StatelessWidget {
                         color: Colors.white.withOpacity(0.9),
                       ),
                 ),
-                const SizedBox(height: AppBrand.spacingL),
-                Text(
-                  'Tocca il logo per continuare',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white70,
+                const SizedBox(height: AppBrand.spacingXL),
+                // Indicatore tap
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.touch_app,
+                        color: Colors.white.withOpacity(0.9),
+                        size: 20,
                       ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Tocca per continuare',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.white.withOpacity(0.9),
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

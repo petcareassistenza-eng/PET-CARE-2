@@ -247,11 +247,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Logo
-                    Image.asset(
-                      'assets/images/my_pet_care_logo.webp',
-                      height: 80,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.pets, size: 80, color: Color(0xFF247B75)),
+                    // 🏠🐾 Logo Casa + Zampa (coerente con splash e login)
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                            color: Colors.black.withOpacity(0.1),
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/images/my_pet_care_splash_logo.png',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.pets,
+                          size: 80,
+                          color: Color(0xFF247B75),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Nome app
+                    Text(
+                      'PetCare',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF247B75),
+                          ),
                     ),
                     const SizedBox(height: 24),
                     
