@@ -23,13 +23,21 @@ class AppConfig {
   static const String stripeYearlyPriceId  = 'price_TEST_YEARLY'; 
 
   // ==========================================
-  // PAYPAL LIVE PLAN ID
+  // PAYPAL LIVE CONFIGURATION
   // ==========================================
-  // Da sostituire con il Plan ID reale ottenuto dalla PayPal Dashboard (modalità LIVE)
-  // Formato: P-XXXXXXXXXXXX
-  // 
-  // Guida completa: docs/PAYPAL-LIVE-SETUP.md
-  static const String paypalMonthlyPlanId = 'P_PAYPAL_MENSILE_LIVE';
+  // App "pet care" - PayPal Dashboard (15/11/25)
+  // Client ID pubblico per PayPal SDK
+  static const String paypalClientId = 'ASbh4faD68qv20avK1hFP1Sy0K88EOKAC9IMkO7g6gxsZd4JB-Blo-fPb0B8VVDWFW1cjKRySE5IGTIL';
+  
+  // PayPal Hosted Button IDs (3 piani abbonamento)
+  static const String paypalMonthlyButtonId = 'MY7X9HN01SAY8';     // €29.00/mese
+  static const String paypalQuarterlyButtonId = 'RSD86UKYD47MW';   // €79.00/3 mesi
+  static const String paypalYearlyButtonId = 'HV7X9HNXH34YN';      // €299.00/anno
+  
+  // Prezzi (per visualizzazione UI)
+  static const double paypalMonthlyPrice = 29.00;
+  static const double paypalQuarterlyPrice = 79.00;
+  static const double paypalYearlyPrice = 299.00;
 
   // ==========================================
   // NOTE:
