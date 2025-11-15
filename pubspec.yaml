@@ -83,12 +83,12 @@ flutter_launcher_icons:
 
 # ---------- SPLASH SCREEN (flutter_native_splash) ----------
 flutter_native_splash:
-  color: "#1C8275"                                                # background chiaro
-  color_dark: "#145B52"                                           # background dark
-  image: assets/logo/my_pet_care_logo.png                         # logo centrale (PNG richiesto)
-  branding: assets/icons/pet_care_icon_512_bordered.png          # branding in basso
+  color: "#00796b"                                                # teal scuro (dal logo)
+  color_dark: "#004b43"                                           # teal più scuro per dark mode
+  image: assets/images/splash.png                                 # splash screen completo MY PET CARE
+  fullscreen: true                                                # splash a schermo intero
   android_12:
-    image: assets/logo/my_pet_care_logo.png
-    icon_background_color: "#1C8275"
-    icon_background_color_dark: "#145B52"                         # NUOVO: dark mode Android 12+
-  web: true                                                       # NUOVO: genera anche splash web
+    image: assets/images/splash.png
+    icon_background_color: "#00796b"
+    icon_background_color_dark: "#004b43"
+  web: true                                                       # genera anche splash web

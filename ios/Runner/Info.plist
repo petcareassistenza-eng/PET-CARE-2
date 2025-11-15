@@ -54,6 +54,8 @@
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>MY PET CARE ha bisogno della tua posizione per mostrarti i professionisti nelle vicinanze.</string>
 		<key>UIStatusBarHidden</key>
+		<true/>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 	</dict>
 </plist>
