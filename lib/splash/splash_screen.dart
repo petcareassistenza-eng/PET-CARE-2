@@ -2,27 +2,63 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../features/auth/login_page.dart';
 
-class SplashScreen extends StatelessWidget {
+/// 🎨 SPLASH SCREEN con Auto-Navigate dopo 3 secondi
+/// Logo visibile per tutta la durata dello splash
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Fade-in animation
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+    
+    _controller.forward();
+    
+    // ✅ Auto-navigate dopo 3 secondi (logo visibile tutto il tempo)
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // ✅ LOGO SEMPRE VISIBILE - Non sparisce più!
-    // L'utente deve fare tap per procedere
     return Scaffold(
       backgroundColor: AppBrand.primary,
       body: SafeArea(
         child: Center(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-              );
-            },
+          child: FadeTransition(
+            opacity: _fadeAnimation,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // 🏠🐾 Logo centrale STATICO - Non scompare
+                // 🏠🐾 Logo centrale con ombra
                 Container(
                   padding: const EdgeInsets.all(AppBrand.spacingL),
                   decoration: BoxDecoration(
@@ -33,7 +69,7 @@ class SplashScreen extends StatelessWidget {
                       BoxShadow(
                         blurRadius: 24,
                         offset: const Offset(0, 12),
-                        color: Colors.black.withOpacity(0.25),
+                        color: Colors.black.withValues(alpha: 0.25),
                       ),
                     ],
                   ),
@@ -45,54 +81,41 @@ class SplashScreen extends StatelessWidget {
                     errorBuilder: (_, __, ___) => const Icon(
                       Icons.pets,
                       size: 140,
-                      color: AppBrand.primary,
+                      color: Colors.white,
                     ),
                   ),
                 ),
                 const SizedBox(height: AppBrand.spacingL),
-                Text(
+                
+                // Nome app
+                const Text(
                   'MY PET CARE',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        letterSpacing: 1.5,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 2.0,
+                  ),
                 ),
                 const SizedBox(height: AppBrand.spacingS),
+                
+                // Tagline
                 Text(
                   'Il tuo pet, il nostro impegno',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.9),
-                      ),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white.withValues(alpha: 0.9),
+                  ),
                 ),
                 const SizedBox(height: AppBrand.spacingXL),
-                // Indicatore tap
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.touch_app,
-                        color: Colors.white.withOpacity(0.9),
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Tocca per continuare',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withOpacity(0.9),
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ],
+                
+                // Loading indicator
+                const SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 ),
               ],
